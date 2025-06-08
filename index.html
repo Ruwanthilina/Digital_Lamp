@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELECTROTECHNOLGY</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+   
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="">
+        <header class="">
+            <h1>ELECTROTECHNOLOGY</h1>
+        </header>
+
+        <div class="sensor-grid">
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb1" onclick="handleBulbClick(1)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">1</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb2" onclick="handleBulbClick(2)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">2</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb3" onclick="handleBulbClick(3)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">3</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb4" onclick="handleBulbClick(4)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">4</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb5" onclick="handleBulbClick(5)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">5</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb6" onclick="handleBulbClick(6)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">6</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb7" onclick="handleBulbClick(7)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">7</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb8" onclick="handleBulbClick(8)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">8</span>
+                </button>
+            </div>
+
+            <div class="sensor-card">
+                <button class="lightbulb-button" id="lightbulb9" onclick="handleBulbClick(9)">
+                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                        <path d="M9 19h6"/>
+                    </svg>
+                    <span class="bulb-number">9</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+ <script>
+        // WebSocket connection setup
+        const ws = new WebSocket('ws://192.168.17.65:81');
+
+        // WebSocket event handlers
+        ws.onopen = () => {
+            console.log("Connected to WebSocket");
+        };
+
+        ws.onclose = () => {
+            console.log("Disconnected from WebSocket");
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        // Bulb states (true = on/yellow, false = off/gray)
+        let bulbStates = {
+            1: true, 2: true, 3: true, 4: true, 5: true,
+            6: true, 7: true, 8: true, 9: true
+        };
+
+        function handleBulbClick(bulbNumber) {
+            const button = document.getElementById(`lightbulb${bulbNumber}`);
+            
+            // Toggle bulb state
+            bulbStates[bulbNumber] = !bulbStates[bulbNumber];
+            
+            // Update visual appearance
+            if (bulbStates[bulbNumber]) {
+                button.classList.remove('off');
+                console.log(`Bulb ${bulbNumber} turned ON`);
+            } else {
+                button.classList.add('off');
+                console.log(`Bulb ${bulbNumber} turned OFF`);
+            }
+            
+            // Add flash effect
+            button.style.backgroundColor = '#ffffff';
+            setTimeout(() => {
+                if (bulbStates[bulbNumber]) {
+                    button.style.backgroundColor = '#f1c40f';
+                } else {
+                    button.style.backgroundColor = '#95a5a6';
+                }
+            }, 100);
+
+            // Send command to WebSocket
+            if (ws.readyState === WebSocket.OPEN) {
+                const action = bulbStates[bulbNumber] ? 'on' : 'off';
+                ws.send(JSON.stringify({ 
+                    sensor: `bulb${bulbNumber}`, 
+                    action: action 
+                }));
+            } else {
+                console.warn("WebSocket is not connected");
+            }
+        }
+
+        // Handle incoming WebSocket messages
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log("Received:", data);
+                
+                // Handle bulb state updates from server
+                if (data.sensor && data.sensor.startsWith('bulb') && data.action) {
+                    const bulbNumber = data.sensor.replace('bulb', '');
+                    const button = document.getElementById(`lightbulb${bulbNumber}`);
+                    
+                    if (button) {
+                        bulbStates[bulbNumber] = data.action === 'on';
+                        
+                        if (bulbStates[bulbNumber]) {
+                            button.classList.remove('off');
+                        } else {
+                            button.classList.add('off');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+            }
+        };
+    </script>
+</body>
+</html>
