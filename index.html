@@ -3,167 +3,736 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELECTROTECHNOLGY</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-   
-    <link rel="stylesheet" href="styles.css">
+    <title>ELECTROTECHNOLOGY Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --dark-bg: #0f0f23;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #b8c1ec;
+            --accent-blue: #00d4ff;
+            --accent-purple: #a855f7;
+            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .control-btn.danger {
+            background: rgba(245, 87, 108, 0.1);
+            border-color: rgba(245, 87, 108, 0.3);
+        }
+
+        .control-btn.danger:hover {
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
+            background: rgba(245, 87, 108, 0.2);
+        }
+
+        /* Bulb Grid */
+        .bulb-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .bulb-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bulb-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-blue);
+        }
+
+        .bulb-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .bulb-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .bulb-button {
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 20px;
+            background: var(--warning-gradient);
+            box-shadow: 
+                0 8px 25px rgba(67, 233, 123, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .bulb-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 
+                0 15px 35px rgba(67, 233, 123, 0.6),
+                0 0 20px rgba(67, 233, 123, 0.4);
+        }
+
+        .bulb-button:active {
+            transform: scale(0.95);
+        }
+
+        .bulb-button.off {
+            background: linear-gradient(135deg, #374151 0%, #6b7280 100%);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .bulb-button.off:hover {
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(107, 114, 128, 0.3);
+        }
+
+        .bulb-icon {
+            width: 40px;
+            height: 40px;
+            fill: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .bulb-button:hover .bulb-icon {
+            transform: rotate(-10deg) scale(1.1);
+            fill: #ffffff;
+        }
+
+        .bulb-number {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            width: 28px;
+            height: 28px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+        }
+
+        .bulb-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .bulb-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .bulb-status {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .bulb-status.online {
+            background: rgba(67, 233, 123, 0.2);
+            color: #43e97b;
+        }
+
+        .bulb-status.offline {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Connection Status Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: var(--text-primary);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .toast.error {
+            border-left: 4px solid #f5576c;
+        }
+
+        /* Floating Control Panel */
+        .floating-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-btn {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .floating-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-btn.active {
+            background: var(--success-gradient);
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.5);
+            animation: pulse-active 2s infinite;
+        }
+
+        .floating-btn.danger {
+            background: var(--secondary-gradient);
+        }
+
+        .floating-btn.danger:hover {
+            box-shadow: 0 12px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .floating-btn i {
+            font-size: 18px;
+        }
+
+        @keyframes pulse-active {
+            0%, 100% { 
+                box-shadow: 0 8px 25px rgba(67, 233, 123, 0.5);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 12px 35px rgba(67, 233, 123, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Tooltip for floating buttons */
+        .floating-btn::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .floating-btn:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Knight Rider specific styles */
+        .knight-rider-active {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .knight-rider-active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 0, 0, 0.3) 20%, 
+                rgba(255, 0, 0, 0.8) 50%, 
+                rgba(255, 0, 0, 0.3) 80%, 
+                transparent 100%);
+            animation: knight-rider-sweep 1s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes knight-rider-sweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .bulb-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .bulb-button {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .bulb-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .floating-controls {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .floating-btn {
+                width: 50px;
+                height: 50px;
+            }
+
+            .floating-btn i {
+                font-size: 16px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="">
-        <header class="">
-            <h1>ELECTROTECHNOLOGY</h1>
+    <div class="particles" id="particles"></div>
+    
+    <div class="dashboard">
+        <header class="header">
+            <h1><i class="fas fa-bolt"></i> ELECTROTECHNOLOGY</h1>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-dot" id="connectionDot"></div>
+                    <span id="connectionStatus">Connecting...</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <span id="activeCount">9 Active</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="uptime">00:00:00</span>
+                </div>
+            </div>
         </header>
 
-        <div class="sensor-grid">
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb1" onclick="handleBulbClick(1)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">1</span>
-                </button>
-            </div>
+        <div class="control-panel">
+            <button class="control-btn" onclick="toggleAllBulbs()">
+                <i class="fas fa-power-off"></i>
+                <span></span>
+            </button>
+            <button class="control-btn" onclick="turnAllOn()">
+                <i class="fas fa-sun"></i>
+                <span></span>
+            </button>
+            <button class="control-btn danger" onclick="turnAllOff()">
+                <i class="fas fa-moon"></i>
+                <span></span>
+            </button>
+            <button class="control-btn" onclick="randomPattern()">
+                <i class="fas fa-random"></i>
+                <span></span>
+            </button>
+        </div>
 
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb2" onclick="handleBulbClick(2)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">2</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb3" onclick="handleBulbClick(3)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">3</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb4" onclick="handleBulbClick(4)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">4</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb5" onclick="handleBulbClick(5)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">5</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb6" onclick="handleBulbClick(6)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">6</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb7" onclick="handleBulbClick(7)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">7</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb8" onclick="handleBulbClick(8)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">8</span>
-                </button>
-            </div>
-
-            <div class="sensor-card">
-                <button class="lightbulb-button" id="lightbulb9" onclick="handleBulbClick(9)">
-                    <svg class="lightbulb-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
-                        <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
-                        <path d="M9 19h6"/>
-                    </svg>
-                    <span class="bulb-number">9</span>
-                </button>
-            </div>
+        <div class="bulb-grid" id="bulbGrid">
+            <!-- Bulbs will be generated by JavaScript -->
         </div>
     </div>
 
- <script>
+    <!-- Floating Control Panel -->
+    <div class="floating-controls">
+        <button class="floating-btn" onclick="toggleAllBulbs()" data-tooltip="Toggle All">
+            <i class="fas fa-power-off"></i>
+        </button>
+        <button class="floating-btn" onclick="turnAllOn()" data-tooltip="All ON">
+            <i class="fas fa-sun"></i>
+        </button>
+        <button class="floating-btn danger" onclick="turnAllOff()" data-tooltip="All OFF">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="floating-btn" id="randomBtn" onclick="toggleRandomPattern()" data-tooltip="Random Pattern">
+            <i class="fas fa-random"></i>
+        </button>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
         // WebSocket connection setup
-        const ws = new WebSocket('ws://192.168.17.65:81');
+        const ws = new WebSocket('ws://192.168.156.45:81');
+        
+        // Bulb states and configuration
+        const bulbNames = [
+            'EL', 'EC', 'TR', 'O', 'TE',
+            'CH', 'NO', 'LO', 'GY'
+        ];
+        
+        let bulbStates = {};
+        let connectionStartTime = Date.now();
+        let uptimeInterval;
+        let randomPatternInterval;
+        let knightRiderInterval;
+        let currentPattern = 'none'; // 'none', 'random', 'knight-rider'
+        let knightRiderPosition = 0;
+        let knightRiderDirection = 1;
+
+        // Initialize bulbs
+        function initializeBulbs() {
+            const bulbGrid = document.getElementById('bulbGrid');
+            bulbGrid.innerHTML = '';
+            
+            for (let i = 1; i <= 9; i++) {
+                bulbStates[i] = true;
+                
+                const bulbCard = document.createElement('div');
+                bulbCard.className = 'bulb-card';
+                bulbCard.innerHTML = `
+                    <button class="bulb-button" id="lightbulb${i}" onclick="handleBulbClick(${i})">
+                        <svg class="bulb-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+                            <path d="M9 21v-1h6v1c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1z"/>
+                            <path d="M9 19h6"/>
+                        </svg>
+                        <div class="bulb-number">${i}</div>
+                    </button>
+                    <div class="bulb-info">
+                        <div class="bulb-name">${bulbNames[i-1]}</div>
+                        <div class="bulb-status online" id="status${i}">Online</div>
+                    </div>
+                `;
+                
+                bulbGrid.appendChild(bulbCard);
+            }
+            
+            updateActiveCount();
+        }
+
+        // Create animated background particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
 
         // WebSocket event handlers
         ws.onopen = () => {
             console.log("Connected to WebSocket");
+            showToast("Connected to Arduino", "success");
+            updateConnectionStatus(true);
+            startUptime();
         };
 
         ws.onclose = () => {
             console.log("Disconnected from WebSocket");
+            showToast("Disconnected from Arduino", "error");
+            updateConnectionStatus(false);
+            stopUptime();
         };
 
         ws.onerror = (error) => {
             console.error("WebSocket error:", error);
+            showToast("Connection error", "error");
+            updateConnectionStatus(false);
         };
 
-        // Bulb states (true = on/yellow, false = off/gray)
-        let bulbStates = {
-            1: true, 2: true, 3: true, 4: true, 5: true,
-            6: true, 7: true, 8: true, 9: true
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log("Received:", data);
+                
+                if (data.sensor && data.sensor.startsWith('bulb') && data.action) {
+                    const bulbNumber = parseInt(data.sensor.replace('bulb', ''));
+                    updateBulbFromServer(bulbNumber, data.action === 'on');
+                }
+            } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+            }
         };
 
+        // Bulb control functions
         function handleBulbClick(bulbNumber) {
+            // Stop any running patterns when manually controlling bulbs
+            if (currentPattern !== 'none') {
+                stopAllPatterns();
+                showToast("Pattern stopped - Manual control", "success");
+            }
+
             const button = document.getElementById(`lightbulb${bulbNumber}`);
+            
+            // Create ripple effect
+            createRipple(button, event);
             
             // Toggle bulb state
             bulbStates[bulbNumber] = !bulbStates[bulbNumber];
+            updateBulbVisual(bulbNumber, bulbStates[bulbNumber]);
             
-            // Update visual appearance
-            if (bulbStates[bulbNumber]) {
-                button.classList.remove('off');
-                console.log(`Bulb ${bulbNumber} turned ON`);
-            } else {
-                button.classList.add('off');
-                console.log(`Bulb ${bulbNumber} turned OFF`);
-            }
-            
-            // Add flash effect
-            button.style.backgroundColor = '#ffffff';
-            setTimeout(() => {
-                if (bulbStates[bulbNumber]) {
-                    button.style.backgroundColor = '#f1c40f';
-                } else {
-                    button.style.backgroundColor = '#95a5a6';
-                }
-            }, 100);
-
             // Send command to WebSocket
             if (ws.readyState === WebSocket.OPEN) {
                 const action = bulbStates[bulbNumber] ? 'on' : 'off';
@@ -172,35 +741,401 @@
                     action: action 
                 }));
             } else {
-                console.warn("WebSocket is not connected");
+                showToast("Arduino not connected", "error");
+            }
+            
+            updateActiveCount();
+        }
+
+        function updateBulbVisual(bulbNumber, isOn) {
+            const button = document.getElementById(`lightbulb${bulbNumber}`);
+            const status = document.getElementById(`status${bulbNumber}`);
+            
+            if (isOn) {
+                button.classList.remove('off');
+                status.textContent = 'Online';
+                status.className = 'bulb-status online';
+            } else {
+                button.classList.add('off');
+                status.textContent = 'Offline';
+                status.className = 'bulb-status offline';
             }
         }
 
-        // Handle incoming WebSocket messages
-        ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                console.log("Received:", data);
+        function updateBulbFromServer(bulbNumber, isOn) {
+            bulbStates[bulbNumber] = isOn;
+            updateBulbVisual(bulbNumber, isOn);
+            updateActiveCount();
+        }
+
+        // Enhanced control panel functions
+        function toggleAllBulbs() {
+            stopAllPatterns();
+            const hasAnyOn = Object.values(bulbStates).some(state => state);
+            const newState = !hasAnyOn;
+            
+            for (let i = 1; i <= 9; i++) {
+                bulbStates[i] = newState;
+                updateBulbVisual(i, newState);
                 
-                // Handle bulb state updates from server
-                if (data.sensor && data.sensor.startsWith('bulb') && data.action) {
-                    const bulbNumber = data.sensor.replace('bulb', '');
-                    const button = document.getElementById(`lightbulb${bulbNumber}`);
-                    
-                    if (button) {
-                        bulbStates[bulbNumber] = data.action === 'on';
-                        
-                        if (bulbStates[bulbNumber]) {
-                            button.classList.remove('off');
-                        } else {
-                            button.classList.add('off');
-                        }
-                    }
+                if (ws.readyState === WebSocket.OPEN) {
+                    setTimeout(() => {
+                        ws.send(JSON.stringify({ 
+                            sensor: `bulb${i}`, 
+                            action: newState ? 'on' : 'off' 
+                        }));
+                    }, i * 100);
                 }
-            } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
             }
-        };
+            
+            updateActiveCount();
+            showToast(`All bulbs turned ${newState ? 'ON' : 'OFF'}`, "success");
+        }
+
+        function turnAllOn() {
+            stopAllPatterns();
+            for (let i = 1; i <= 9; i++) {
+                bulbStates[i] = true;
+                updateBulbVisual(i, true);
+                
+                if (ws.readyState === WebSocket.OPEN) {
+                    setTimeout(() => {
+                        ws.send(JSON.stringify({ 
+                            sensor: `bulb${i}`, 
+                            action: 'on' 
+                        }));
+                    }, i * 100);
+                }
+            }
+            
+            updateActiveCount();
+            showToast("All bulbs turned ON", "success");
+        }
+
+        function turnAllOff() {
+            stopAllPatterns();
+            for (let i = 1; i <= 9; i++) {
+                bulbStates[i] = false;
+                updateBulbVisual(i, false);
+                
+                if (ws.readyState === WebSocket.OPEN) {
+                    setTimeout(() => {
+                        ws.send(JSON.stringify({ 
+                            sensor: `bulb${i}`, 
+                            action: 'off' 
+                        }));
+                    }, i * 100);
+                }
+            }
+            
+            updateActiveCount();
+            showToast("All bulbs turned OFF", "success");
+        }
+
+        function toggleRandomPattern() {
+            const randomBtn = document.getElementById('randomBtn');
+            
+            if (currentPattern === 'random') {
+                stopAllPatterns();
+                randomBtn.classList.remove('active');
+                showToast("Random pattern stopped", "success");
+            } else {
+                stopAllPatterns();
+                startRandomPattern();
+                randomBtn.classList.add('active');
+                showToast("Random pattern started", "success");
+            }
+        }
+
+        function startRandomPattern() {
+            currentPattern = 'random';
+            let patternIndex = 0;
+            const patterns = [
+                () => randomLights(),
+                () => knightRider(),
+                () => wavePattern(),
+                () => blinkPattern(),
+                () => spiralPattern()
+            ];
+
+            randomPatternInterval = setInterval(() => {
+                patterns[patternIndex]();
+                patternIndex = (patternIndex + 1) % patterns.length;
+            }, 3000); // Change pattern every 3 seconds
+        }
+
+        function randomLights() {
+            for (let i = 1; i <= 9; i++) {
+                const randomState = Math.random() > 0.5;
+                setTimeout(() => {
+                    bulbStates[i] = randomState;
+                    updateBulbVisual(i, randomState);
+                    sendBulbCommand(i, randomState);
+                }, i * 100);
+            }
+            updateActiveCount();
+        }
+
+        function knightRider() {
+            // Turn all bulbs off first
+            for (let i = 1; i <= 9; i++) {
+                bulbStates[i] = false;
+                updateBulbVisual(i, false);
+                sendBulbCommand(i, false);
+            }
+
+            // Add knight rider effect to the grid
+            const bulbGrid = document.getElementById('bulbGrid');
+            bulbGrid.classList.add('knight-rider-active');
+
+            let position = 0;
+            let direction = 1;
+            let sweepCount = 0;
+            const maxSweeps = 3;
+
+            const knightRiderSweep = setInterval(() => {
+                // Turn off previous bulb
+                if (position >= 1 && position <= 9) {
+                    bulbStates[position] = false;
+                    updateBulbVisual(position, false);
+                    sendBulbCommand(position, false);
+                }
+
+                // Move to next position
+                position += direction;
+
+                // Check boundaries and reverse direction
+                if (position > 9) {
+                    direction = -1;
+                    position = 8;
+                    sweepCount++;
+                } else if (position < 1) {
+                    direction = 1;
+                    position = 2;
+                    sweepCount++;
+                }
+
+                // Turn on current bulb with red effect
+                if (position >= 1 && position <= 9) {
+                    bulbStates[position] = true;
+                    updateBulbVisual(position, true);
+                    sendBulbCommand(position, true);
+                    
+                    // Add temporary red glow effect
+                    const bulbButton = document.getElementById(`lightbulb${position}`);
+                    bulbButton.style.boxShadow = '0 8px 25px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.4)';
+                    
+                    setTimeout(() => {
+                        if (bulbButton) {
+                            bulbButton.style.boxShadow = '';
+                        }
+                    }, 200);
+                }
+
+                // Stop after specified sweeps
+                if (sweepCount >= maxSweeps) {
+                    clearInterval(knightRiderSweep);
+                    bulbGrid.classList.remove('knight-rider-active');
+                    
+                    // Turn off all bulbs
+                    setTimeout(() => {
+                        for (let i = 1; i <= 9; i++) {
+                            bulbStates[i] = false;
+                            updateBulbVisual(i, false);
+                            sendBulbCommand(i, false);
+                        }
+                        updateActiveCount();
+                    }, 500);
+                }
+
+                updateActiveCount();
+            }, 200); // Speed of knight rider sweep
+        }
+
+        function wavePattern() {
+            for (let wave = 0; wave < 2; wave++) {
+                for (let i = 1; i <= 9; i++) {
+                    setTimeout(() => {
+                        bulbStates[i] = true;
+                        updateBulbVisual(i, true);
+                        sendBulbCommand(i, true);
+                        
+                        setTimeout(() => {
+                            bulbStates[i] = false;
+                            updateBulbVisual(i, false);
+                            sendBulbCommand(i, false);
+                        }, 300);
+                    }, (wave * 1500) + (i * 100));
+                }
+            }
+            
+            setTimeout(() => {
+                updateActiveCount();
+            }, 3000);
+        }
+
+        function blinkPattern() {
+            let blinkCount = 0;
+            const maxBlinks = 6;
+            
+            const blinkInterval = setInterval(() => {
+                const allOn = blinkCount % 2 === 0;
+                
+                for (let i = 1; i <= 9; i++) {
+                    bulbStates[i] = allOn;
+                    updateBulbVisual(i, allOn);
+                    sendBulbCommand(i, allOn);
+                }
+                
+                blinkCount++;
+                updateActiveCount();
+                
+                if (blinkCount >= maxBlinks) {
+                    clearInterval(blinkInterval);
+                }
+            }, 300);
+        }
+
+        function spiralPattern() {
+            const spiralOrder = [1, 2, 3, 6, 9, 8, 7, 4, 5]; // Spiral from outside to center
+            
+            // Turn on in spiral
+            spiralOrder.forEach((bulbNum, index) => {
+                setTimeout(() => {
+                    bulbStates[bulbNum] = true;
+                    updateBulbVisual(bulbNum, true);
+                    sendBulbCommand(bulbNum, true);
+                }, index * 200);
+            });
+            
+            // Turn off in reverse spiral
+            setTimeout(() => {
+                spiralOrder.reverse().forEach((bulbNum, index) => {
+                    setTimeout(() => {
+                        bulbStates[bulbNum] = false;
+                        updateBulbVisual(bulbNum, false);
+                        sendBulbCommand(bulbNum, false);
+                    }, index * 150);
+                });
+            }, 2000);
+            
+            setTimeout(() => {
+                updateActiveCount();
+            }, 4000);
+        }
+
+        function stopAllPatterns() {
+            currentPattern = 'none';
+            
+            if (randomPatternInterval) {
+                clearInterval(randomPatternInterval);
+                randomPatternInterval = null;
+            }
+            
+            if (knightRiderInterval) {
+                clearInterval(knightRiderInterval);
+                knightRiderInterval = null;
+            }
+            
+            // Remove any active pattern classes
+            const randomBtn = document.getElementById('randomBtn');
+            const bulbGrid = document.getElementById('bulbGrid');
+            
+            randomBtn.classList.remove('active');
+            bulbGrid.classList.remove('knight-rider-active');
+        }
+
+        function sendBulbCommand(bulbNumber, state) {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ 
+                    sensor: `bulb${bulbNumber}`, 
+                    action: state ? 'on' : 'off' 
+                }));
+            }
+        }
+
+        // UI helper functions
+        function createRipple(button, event) {
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            toastMessage.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            if (type === "success") {
+                icon.className = "fas fa-check-circle";
+            } else {
+                icon.className = "fas fa-exclamation-triangle";
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateConnectionStatus(connected) {
+            const status = document.getElementById('connectionStatus');
+            const dot = document.getElementById('connectionDot');
+            
+            if (connected) {
+                status.textContent = 'Connected';
+                dot.style.background = '#43e97b';
+            } else {
+                status.textContent = 'Disconnected';
+                dot.style.background = '#f5576c';
+            }
+        }
+
+        function updateActiveCount() {
+            const activeCount = Object.values(bulbStates).filter(state => state).length;
+            document.getElementById('activeCount').textContent = `${activeCount} Active`;
+        }
+
+        function startUptime() {
+            uptimeInterval = setInterval(() => {
+                const elapsed = Date.now() - connectionStartTime;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                
+                document.getElementById('uptime').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopUptime() {
+            if (uptimeInterval) {
+                clearInterval(uptimeInterval);
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeBulbs();
+            createParticles();
+        });
     </script>
 </body>
 </html>

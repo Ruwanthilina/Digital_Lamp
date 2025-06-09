@@ -1,1 +1,59 @@
 # Digital_Lamp
+Hardware Connections:
+
+Bulb 1  → GPIO 2
+Bulb 2  → GPIO 4  
+Bulb 3  → GPIO 5
+Bulb 4  → GPIO 18
+Bulb 5  → GPIO 19
+Bulb 6  → GPIO 21
+Bulb 7  → GPIO 22
+Bulb 8  → GPIO 23
+Bulb 9  → GPIO 25
+
+
+
+Required Libraries:
+Arduino IDE එකේ මේවා install කරන්න:
+
+WebSockets by Markus Sattler
+ArduinoJson by Benoit Blanchon
+
+Configuration:
+
+WiFi credentials change කරන්න:
+cppconst char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+GPIO pins customize කරන්න ඔබේ wiring අනුව:
+cppconst int bulbPins[9] = {2, 4, 5, 18, 19, 21, 22, 23, 25};
+
+
+Features:
+
+✅ WebSocket server port 81 එකේ
+✅ Individual bulb control (bulb1-bulb9)
+✅ State synchronization between web and hardware
+✅ WiFi reconnection handling
+✅ Status LED connection indicator
+✅ Lighting patterns (sequential, blink, checkerboard)
+✅ JSON communication protocol
+
+WebSocket Commands:
+json{"sensor": "bulb1", "action": "on"}
+{"sensor": "bulb1", "action": "off"}
+Wiring Example:
+ESP32 → Relay/LED/Bulb
+GPIO 2  → Bulb 1 (+)
+GPIO 4  → Bulb 2 (+)
+...
+GND     → Common Ground
+3.3V    → Common Positive (if using LEDs)
+📱 Testing:
+
+Upload කරන්න ESP32 එකට
+Serial Monitor check කරන්න IP address එක
+Website එකේ WebSocket URL update කරන්න
+Bulbs click කරලා test කරන්න
+
+Relay modules use කරනවා නම් separate power supply අවශ්‍ය වෙන්න පුළුවන්. Hardware setup එක කොහොමද?

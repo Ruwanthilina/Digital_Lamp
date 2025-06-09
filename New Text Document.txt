@@ -1,4 +1,5 @@
 Hardware Connections:
+
 Bulb 1  → GPIO 2
 Bulb 2  → GPIO 4  
 Bulb 3  → GPIO 5
@@ -8,6 +9,9 @@ Bulb 6  → GPIO 21
 Bulb 7  → GPIO 22
 Bulb 8  → GPIO 23
 Bulb 9  → GPIO 25
+
+
+
 Required Libraries:
 Arduino IDE එකේ මේවා install කරන්න:
 

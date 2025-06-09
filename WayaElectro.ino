@@ -1,22 +1,20 @@
+
 #include <WiFi.h>
 #include <WebSocketsServer.h>
 #include <ArduinoJson.h>
 
 // WiFi credentials
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid = "Ruwan";
+const char* password = "12345678";
 
 // WebSocket server on port 81
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-// Lightbulb GPIO pins (change these according to your wiring)
-const int bulbPins[9] = {2, 4, 5, 18, 19, 21, 22, 23, 25};
+// Pin definitions for 9 bulbs/LEDs
+const int bulbPins[9] = {2, 4, 5, 12, 13, 14, 15, 16, 17};
 
-// Bulb states (true = ON, false = OFF)
-bool bulbStates[9] = {false, false, false, false, false, false, false, false, false};
-
-// Built-in LED for connection status
-const int statusLED = 2;
+// Bulb states (true = on, false = off)
+bool bulbStates[9] = {true, true, true, true, true, true, true, true, true};
 
 void setup() {
   Serial.begin(115200);
@@ -24,85 +22,62 @@ void setup() {
   // Initialize bulb pins as outputs
   for (int i = 0; i < 9; i++) {
     pinMode(bulbPins[i], OUTPUT);
-    digitalWrite(bulbPins[i], LOW); // Start with all bulbs OFF
+    digitalWrite(bulbPins[i], HIGH); // Start with all bulbs ON (matching your HTML default)
   }
-  
-  // Initialize status LED
-  pinMode(statusLED, OUTPUT);
-  digitalWrite(statusLED, LOW);
   
   // Connect to WiFi
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(1000);
     Serial.print(".");
-    // Blink status LED while connecting
-    digitalWrite(statusLED, !digitalRead(statusLED));
   }
   
   Serial.println();
-  Serial.print("WiFi connected! IP address: ");
+  Serial.print("Connected to WiFi! IP address: ");
   Serial.println(WiFi.localIP());
-  
-  // Turn on status LED when connected
-  digitalWrite(statusLED, HIGH);
   
   // Start WebSocket server
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
   
   Serial.println("WebSocket server started on port 81");
-  Serial.println("Ready to receive commands!");
-  
-  // Print pin configuration
-  Serial.println("\n--- Pin Configuration ---");
-  for (int i = 0; i < 9; i++) {
-    Serial.printf("Bulb %d: GPIO %d\n", i + 1, bulbPins[i]);
-  }
-  Serial.println("------------------------\n");
+  Serial.println("Update your HTML file with this IP address:");
+  Serial.print("ws://");
+  Serial.print(WiFi.localIP());
+  Serial.println(":81");
 }
 
 void loop() {
   webSocket.loop();
   
-  // Keep WiFi connection alive
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi disconnected. Reconnecting...");
-    WiFi.begin(ssid, password);
-    digitalWrite(statusLED, LOW);
-    
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-      digitalWrite(statusLED, !digitalRead(statusLED));
-    }
-    
-    Serial.println("\nWiFi reconnected!");
-    digitalWrite(statusLED, HIGH);
+  // Optional: Add a heartbeat or status update every 30 seconds
+  static unsigned long lastHeartbeat = 0;
+  if (millis() - lastHeartbeat > 30000) {
+    sendStatusUpdate();
+    lastHeartbeat = millis();
   }
-  
-  delay(10); // Small delay to prevent watchdog issues
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
-  switch (type) {
+  switch(type) {
     case WStype_DISCONNECTED:
-      Serial.printf("Client %u disconnected\n", num);
+      Serial.printf("Client [%u] disconnected\n", num);
       break;
       
     case WStype_CONNECTED: {
       IPAddress ip = webSocket.remoteIP(num);
-      Serial.printf("Client %u connected from %d.%d.%d.%d\n", num, ip[0], ip[1], ip[2], ip[3]);
+      Serial.printf("Client [%u] connected from %d.%d.%d.%d\n", 
+                    num, ip[0], ip[1], ip[2], ip[3]);
       
-      // Send current bulb states to newly connected client
-      sendAllBulbStates(num);
+      // Send current status to newly connected client
+      sendStatusToClient(num);
       break;
     }
     
     case WStype_TEXT: {
-      Serial.printf("Received from client %u: %s\n", num, payload);
+      Serial.printf("Received from client [%u]: %s\n", num, payload);
       
       // Parse JSON message
       DynamicJsonDocument doc(1024);
@@ -114,33 +89,32 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         return;
       }
       
-      // Handle bulb commands
-      if (doc.containsKey("sensor") && doc.containsKey("action")) {
-        String sensor = doc["sensor"];
-        String action = doc["action"];
+      // Extract sensor and action
+      String sensor = doc["sensor"];
+      String action = doc["action"];
+      
+      if (sensor.startsWith("bulb") && (action == "on" || action == "off")) {
+        int bulbNumber = sensor.substring(4).toInt(); // Extract number from "bulb1", "bulb2", etc.
         
-        if (sensor.startsWith("bulb")) {
-          int bulbNumber = sensor.substring(4).toInt(); // Extract number from "bulb1", "bulb2", etc.
+        if (bulbNumber >= 1 && bulbNumber <= 9) {
+          int bulbIndex = bulbNumber - 1; // Convert to 0-based index
+          bool newState = (action == "on");
           
-          if (bulbNumber >= 1 && bulbNumber <= 9) {
-            handleBulbCommand(bulbNumber, action, num);
-          } else {
-            Serial.printf("Invalid bulb number: %d\n", bulbNumber);
-          }
+          // Update bulb state and hardware
+          bulbStates[bulbIndex] = newState;
+          digitalWrite(bulbPins[bulbIndex], newState ? HIGH : LOW);
+          
+          Serial.printf("Bulb %d turned %s\n", bulbNumber, newState ? "ON" : "OFF");
+          
+          // Broadcast the state change to all connected clients
+          broadcastBulbState(bulbNumber, newState);
         }
       }
-      
-      // Handle other sensor commands (from your original code)
-      else if (doc.containsKey("sensor")) {
-        String sensor = doc["sensor"];
-        handleOtherSensors(sensor, num);
-      }
-      
       break;
     }
     
     case WStype_BIN:
-      Serial.printf("Received binary data from client %u\n", num);
+      Serial.printf("Received binary data from client [%u]\n", num);
       break;
       
     default:
@@ -148,143 +122,64 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
   }
 }
 
-void handleBulbCommand(int bulbNumber, String action, uint8_t clientNum) {
-  int bulbIndex = bulbNumber - 1; // Convert to 0-based index
+void broadcastBulbState(int bulbNumber, bool state) {
+  DynamicJsonDocument doc(200);
+  doc["sensor"] = "bulb" + String(bulbNumber);
+  doc["action"] = state ? "on" : "off";
+  doc["timestamp"] = millis();
   
-  if (action == "on") {
-    digitalWrite(bulbPins[bulbIndex], HIGH);
-    bulbStates[bulbIndex] = true;
-    Serial.printf("Bulb %d turned ON (GPIO %d)\n", bulbNumber, bulbPins[bulbIndex]);
-  } 
-  else if (action == "off") {
-    digitalWrite(bulbPins[bulbIndex], LOW);
-    bulbStates[bulbIndex] = false;
-    Serial.printf("Bulb %d turned OFF (GPIO %d)\n", bulbNumber, bulbPins[bulbIndex]);
-  }
+  String message;
+  serializeJson(doc, message);
   
-  // Send confirmation back to all connected clients
-  DynamicJsonDocument response(200);
-  response["sensor"] = "bulb" + String(bulbNumber);
-  response["action"] = action;
-  response["status"] = "success";
-  
-  String responseStr;
-  serializeJson(response, responseStr);
-  webSocket.broadcastTXT(responseStr);
+  webSocket.broadcastTXT(message);
 }
 
-void handleOtherSensors(String sensor, uint8_t clientNum) {
-  // Handle other sensors like RGB, buzzer, etc.
-  Serial.printf("Handling sensor: %s\n", sensor.c_str());
-  
-  // Example: RGB LED control
-  if (sensor == "red" || sensor == "green" || sensor == "blue") {
-    Serial.printf("RGB command received: %s\n", sensor.c_str());
-    // Add your RGB LED control code here
-  }
-  
-  // Add more sensor handling as needed
-}
-
-void sendAllBulbStates(uint8_t clientNum) {
+void sendStatusToClient(uint8_t clientNum) {
+  // Send current state of all bulbs to a specific client
   for (int i = 0; i < 9; i++) {
     DynamicJsonDocument doc(200);
     doc["sensor"] = "bulb" + String(i + 1);
     doc["action"] = bulbStates[i] ? "on" : "off";
-    doc["status"] = "current_state";
+    doc["timestamp"] = millis();
     
     String message;
     serializeJson(doc, message);
-    webSocket.sendTXT(clientNum, message);
     
+    webSocket.sendTXT(clientNum, message);
     delay(10); // Small delay between messages
   }
 }
 
-// Function to control all bulbs at once
-void controlAllBulbs(bool state) {
+void sendStatusUpdate() {
+  // Send periodic status update with system info
+  DynamicJsonDocument doc(300);
+  doc["type"] = "status";
+  doc["uptime"] = millis();
+  doc["free_heap"] = ESP.getFreeHeap();
+  doc["connected_clients"] = webSocket.connectedClients();
+  
+  String message;
+  serializeJson(doc, message);
+  
+  webSocket.broadcastTXT(message);
+}
+
+// Function to manually control bulbs (for testing or other triggers)
+void setBulb(int bulbNumber, bool state) {
+  if (bulbNumber >= 1 && bulbNumber <= 9) {
+    int bulbIndex = bulbNumber - 1;
+    bulbStates[bulbIndex] = state;
+    digitalWrite(bulbPins[bulbIndex], state ? HIGH : LOW);
+    broadcastBulbState(bulbNumber, state);
+  }
+}
+
+// Function to turn all bulbs on or off
+void setAllBulbs(bool state) {
   for (int i = 0; i < 9; i++) {
-    digitalWrite(bulbPins[i], state ? HIGH : LOW);
     bulbStates[i] = state;
+    digitalWrite(bulbPins[i], state ? HIGH : LOW);
+    broadcastBulbState(i + 1, state);
+    delay(50); // Small delay for visual effect
   }
-  
-  // Broadcast state to all clients
-  DynamicJsonDocument response(200);
-  response["sensor"] = "all_bulbs";
-  response["action"] = state ? "on" : "off";
-  response["status"] = "success";
-  
-  String responseStr;
-  serializeJson(response, responseStr);
-  webSocket.broadcastTXT(responseStr);
-  
-  Serial.printf("All bulbs turned %s\n", state ? "ON" : "OFF");
-}
-
-// Function to create lighting patterns
-void lightingPattern(int pattern) {
-  switch (pattern) {
-    case 1: // Sequential on
-      for (int i = 0; i < 9; i++) {
-        digitalWrite(bulbPins[i], HIGH);
-        bulbStates[i] = true;
-        delay(200);
-        
-        // Send update to clients
-        DynamicJsonDocument doc(200);
-        doc["sensor"] = "bulb" + String(i + 1);
-        doc["action"] = "on";
-        doc["status"] = "pattern";
-        
-        String message;
-        serializeJson(doc, message);
-        webSocket.broadcastTXT(message);
-      }
-      break;
-      
-    case 2: // Blink all
-      for (int j = 0; j < 3; j++) {
-        controlAllBulbs(true);
-        delay(500);
-        controlAllBulbs(false);
-        delay(500);
-      }
-      break;
-      
-    case 3: // Checkerboard pattern
-      // Pattern 1
-      for (int i = 0; i < 9; i++) {
-        bool state = (i % 2 == 0);
-        digitalWrite(bulbPins[i], state ? HIGH : LOW);
-        bulbStates[i] = state;
-      }
-      delay(1000);
-      
-      // Pattern 2 (inverse)
-      for (int i = 0; i < 9; i++) {
-        bool state = (i % 2 == 1);
-        digitalWrite(bulbPins[i], state ? HIGH : LOW);
-        bulbStates[i] = state;
-      }
-      delay(1000);
-      
-      // Turn all off
-      controlAllBulbs(false);
-      break;
-  }
-}
-
-// You can call this function for testing
-void testAllBulbs() {
-  Serial.println("Testing all bulbs...");
-  
-  for (int i = 0; i < 9; i++) {
-    Serial.printf("Testing bulb %d (GPIO %d)\n", i + 1, bulbPins[i]);
-    digitalWrite(bulbPins[i], HIGH);
-    delay(300);
-    digitalWrite(bulbPins[i], LOW);
-    delay(100);
-  }
-  
-  Serial.println("Bulb test completed!");
 }
