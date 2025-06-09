@@ -1,4 +1,3 @@
-
 #include <WiFi.h>
 #include <WebSocketsServer.h>
 #include <ArduinoJson.h>
